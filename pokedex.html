@@ -7,8 +7,10 @@
         <div id="bg_curve1_left"></div>
         <div id="bg_curve2_left"></div>
         <div id="curve1_left">
-            <div id="buttonGlass">
-                <div id="reflect"> </div>
+            <form action="/acao" method="POST">
+                <div id="buttonGlass">
+                    <div id="reflect"> </div>
+                </form>
             </div>
             <div id="miniButtonGlass1"></div>
             <div id="miniButtonGlass2"></div>
@@ -57,36 +59,90 @@
             </div>
         </div>
     </div>
-        <div id="right">
-            <div id="stats">
-            
-            </div>
+    <div id="right">
+        <div id="stats">
+        </div>
+        <div id="blueButtons1">
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+        </div>
 
-            <div id="blueButtons1">
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-            </div>
+        <div id="blueButtons2">
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+            <div className="blueButton"></div>
+        </div>
 
-            <div id="blueButtons2">
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-                <div className="blueButton"></div>
-            </div>
-
-            <div id="miniButtonGlass4"></div>
-            <div id="miniButtonGlass5"></div>
-            <div id="barbutton3"></div>
-            <div id="barbutton4"></div>
-            <div id="yellowBox1"></div>
-            <div id="yellowBox2"></div>
-            <div id="bg_curve1_right"></div>
-            <div id="bg_curve2_right"></div>
-            <div id="curve1_right"></div>
-            <div id="curve2_right"></div>
+        <div id="miniButtonGlass4"></div>
+        <div id="miniButtonGlass5"></div>
+        <div id="barbutton3"></div>
+        <div id="barbutton4"></div>
+        <div id="yellowBox1"></div>
+        <div id="yellowBox2"></div>
+        <div id="bg_curve1_right"></div>
+        <div id="bg_curve2_right"></div>
+        <div id="curve1_right"></div>
+        <div id="curve2_right"></div>
     </div>
 </div>
+
+<script>
+     let contadorId = 1;
+
+    async function carregarPokemon(id) {
+        const request = await fetch(`http://localhost:5000/pokemons/${id}`)
+        const response = await request.json()
+        
+        return response
+    }
+
+    async function updateScreen() {       
+        try {
+            const pokemon = await carregarPokemon(contadorId);
+
+            const image = document.getElementById('image_pokemon')
+            image.src = pokemon.image
+            image.alt = pokemon.name
+
+            const statsDiv = document.getElementById('stats')
+            statsDiv.innerHTML = `
+                <p><strong>Name: </strong> ${pokemon.name}</p>
+                <p><strong>Type: </strong> ${pokemon.type}</p>
+                <p><strong>Skill: </strong> ${pokemon.skill}</p>
+                <p><strong>Evolution: </strong> ${pokemon.evolution}</p>
+            `
+        } catch (error) {
+            console.log("Erro: ", error)
+        }
+    }
+
+        function updateId(increment) {
+        contadorId += increment
+        console.log(increment, contadorId)
+
+        if (contadorId > 10) contadorId = 1
+        if (contadorId < 1) contadorId = 10
+    }
+
+
+    window.onload = () => {
+        updateScreen()
+        
+        document.getElementById('rightcross').addEventListener('click', () => {
+            updateId(1)
+            updateScreen()
+        })
+
+        document.getElementById('leftcross').addEventListener('click', () => {
+            updateId(-1)
+            updateScreen()
+        })
+
+    }
+
+</script>
